@@ -6,6 +6,33 @@ from server import app
 
 def load_users():
     """Load users from u.user into database."""
+    # import u.user
+    # connection = sqlite3.connect('ratings.db')
+    f = open("seed_data/u.user")
+    for line in f:
+        line = line.rstrip().split("|")
+        newuser = User(user_id = line[0], age = line[1], zipcode = line[4])
+
+        db.session.add(newuser)
+
+        # user_id = line[0] 
+        # age = line[1]
+        # zipcode = line[4]
+        # db.session.add(User)
+        
+        # db.session.add(user)
+
+
+        # email = "NULL"
+        # password = "NULL"
+
+        # print "HIIIIIII!!!!!"
+        # print user_id, email, zipcode 
+
+    # QUERY = "INSERT INTO users VALUES(user_id, email, password, age, zipcode)"
+    # connect.commit() 
+
+
 
 
 def load_movies():
@@ -20,5 +47,5 @@ if __name__ == "__main__":
     connect_to_db(app)
 
     load_users()
-    load_movies()
-    load_ratings()
+    # load_movies()
+    # load_ratings()
