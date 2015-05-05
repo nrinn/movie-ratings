@@ -36,9 +36,12 @@ def load_movies():
             released_at = datetime.now()
         else:
             released_at = datetime.strptime(s,"%d-%b-%Y")
-       
 
-        print released_at
+            movie = Movie(movie_id=movie_id, title=title, released_at=released_at, imdb_url=imdb_url)
+
+            db.session.add(movie)
+    db.session.commit()
+
 
 def load_ratings():
     """Load ratings from u.data into database."""
