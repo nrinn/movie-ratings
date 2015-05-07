@@ -4,6 +4,7 @@ from jinja2 import StrictUndefined
 
 from flask import Flask, render_template, redirect, request, flash, session
 from flask_debugtoolbar import DebugToolbarExtension
+# //import os - not sure why this might be needed for log-in
 
 from model import User, Rating, Movie, connect_to_db, db
 
@@ -23,6 +24,60 @@ def index():
     """Homepage."""
 
     return render_template('homepage.html')
+
+@app.route('/register', methods=['GET'])
+def register_form():
+
+    return render_template("register_form.html")
+
+@app.route('/register', methods=['POST'])
+def register_process():
+
+    email = request.form["email"]
+    password = request.form["password"]
+    age = int(request.form["age"])
+    zipcode = request.form["zipcode"]
+
+    new_user = User(email=email, password=password, age=age, zipcode=zipcode)
+
+    db.session.add(new_user)
+    db.session.commit()
+
+    flash("User %s added." % email)
+    return redirect("/")
+
+@app.route('/login', methods=['GET'])
+def login_form():
+
+    return render_template("login_form.html")
+
+@app.route('/login', methods=['POST'])
+def login_process():
+
+    email = request.form["email"]
+    password = request.form["password"]
+
+    user = User.query.filter_by(email=email).first()
+
+    if not user:
+        flash("User does not exist. Please try again")
+        return redirect("/login")
+
+    if user.password != password:
+        flash("Password is not correct. Please try again.")
+        return redirect("/login")
+
+    session["user_id"] = user.user_id
+
+    flash("You are logged in!")
+    return redirect("/users/%s" % user.user_id)
+
+@app.route('/logout')
+def logout():
+
+    del session["user_id"]
+    flash("You have logged out.")
+    return redirect ("/")
 
 @app.route("/users")
 def user_list():
