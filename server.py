@@ -86,6 +86,13 @@ def user_list():
     users = User.query.all()
     return render_template("user_list.html", users=users)
 
+@app.route("/users/<int:user_id>")
+def user_detail(user_id):
+    """Show user profile."""
+
+    user = User.query.get(user_id)
+    return render_template("user.html", user=user)
+
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the point
     # that we invoke the DebugToolbarExtension
