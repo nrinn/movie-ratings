@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    <h1>{{ movie.title }}</h1>
+    <p>Release Date: {{ movie.released_at }}</p>
+    <p><a href = {{ movie.imdb_url }}>IMDB</a></p>
+
+  {% if movie.ratings %}
+      <h2>Ratings</h2>
+      <ul>
+        {% for rating in movie.ratings %}
+            <li>
+                <a href="/users/{{ rating.user_id }}">{{ rating.user_id }}</a>
+                rated {{ rating.score }}</li>
+        {% endfor %}
+      </ul>
+<!--   {% endif %} -->
+
+  {% if "user_id" in session %}
+    <h2>Your Rating</h2>
+    {% if user_rating %}
+        <p>You rated this movie a score of: {{ user_rating.score }}</p>
+    {% endif %}
+   <form action="/movies/{{ movie.movie_id }}" method="POST">
+    Rate this movie:
+    <select name="score">
+      <option value=1>1</option>
+      <option value=2>2</option>
+      <option value=3>3</option>
+      <option value=4>4</option>
+      <option value=5>5</option>
+    </select>
+    <input type="submit" value="Rate It!">
+    </form>
+  {% endif %}
+{% endblock %}
+
+
+
+<!-- {% extends 'base.html' %}
+{% block content %}
+
+    <h1>{{ movie.title }}</h1>
+
+   <ul>
+        <li>Release Date: {{ movie.released_at }}</li>
+        <li><a href = {{ movie.imdb_url }}>IMDB</a></li>
+
+    </ul>
+
+        {% if movie.ratings %}
+        <h2>Ratings</h2>
+        <ul>
+        {% for rating in movie.ratings %}
+            <li>
+                User #<b><em> <a href="/users/{{ rating.user_id }}">{{ rating.user_id }}</a></em></b> 
+         gave this movie a rating of: {{ rating.score }}
+            </li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+   <form action="/movies/{{ movie.movie_id }}" method="POST">
+    Rate this movie:
+    <select name="score">
+      <option value=1>1</option>
+      <option value=2>2</option>
+      <option value=3>3</option>
+      <option value=4>4</option>
+      <option value=5>5</option>
+    </select>
+    <input type="submit" value="Rate It!">
+    </form>
+  {% endif %}
+
+{% endblock %} -->

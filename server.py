@@ -93,6 +93,58 @@ def user_detail(user_id):
     user = User.query.get(user_id)
     return render_template("user.html", user=user)
 
+@app.route("/movies")
+def movie_list():
+    """Show list of movies."""
+
+    movies = Movie.query.all()
+
+    return render_template("movie_list.html", movies=movies)
+
+@app.route("/movies/<int:movie_id>", methods=['GET'])
+def movie_detail(movie_id):
+    """Show movie details."""
+
+    movie = Movie.query.get(movie_id)
+
+    user_id = session.get("user_id")
+    
+    if user_id:
+        user_rating = Rating.query.filter_by(
+            movie_id=movie_id, user_id=user_id).first()
+
+    else:
+        user_rating = None
+
+    return render_template("movie.html",
+                           movie=movie,
+                           user_rating=user_rating)
+
+
+@app.route("/movies/<int:movie_id>", methods=['POST'])
+def rate_movie(movie_id):
+
+    score = int(request.form["score"])
+
+    user_id = session.get("user_id")
+    if not user_id:
+        raise Exception("You are not logged in.")
+
+    rating = Rating.query.filter_by(user_id=user_id, movie_id=movie_id).first()
+
+    if rating:
+        rating.score = score
+        flash ("Your rating has been updated!")
+
+    else:
+        rating = Rating(user_id=user_id, movie_id=movie_id, score=score)
+        flash("Your rating has been added!")
+        db.session.add(rating)
+
+    db.session.commit()
+
+    return redirect("/movies/%s" % movie_id)
+
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the point
     # that we invoke the DebugToolbarExtension
