@@ -103,12 +103,15 @@ def movie_list():
 
 @app.route("/movies/<int:movie_id>", methods=['GET'])
 def movie_detail(movie_id):
-    """Show movie details."""
+    """Show info about movie.
+
+    If a user is logged in, let them add/edit a rating.
+    """
 
     movie = Movie.query.get(movie_id)
 
     user_id = session.get("user_id")
-    
+
     if user_id:
         user_rating = Rating.query.filter_by(
             movie_id=movie_id, user_id=user_id).first()
@@ -116,9 +119,27 @@ def movie_detail(movie_id):
     else:
         user_rating = None
 
-    return render_template("movie.html",
-                           movie=movie,
-                           user_rating=user_rating)
+    # Get average rating of movie
+
+    rating_scores = [r.score for r in movie.ratings]
+    avg_rating = float(sum(rating_scores)) / len(rating_scores)
+
+    prediction = None
+
+    # Prediction code: only predict if the user hasn't rated it.
+
+    if (not user_rating) and user_id:
+        user = User.query.get(user_id)
+        if user:
+            prediction = user.predict_rating(movie)
+
+    return render_template(
+        "movie.html",
+        movie=movie,
+        user_rating=user_rating,
+        average=avg_rating,
+        prediction=prediction
+        )
 
 
 @app.route("/movies/<int:movie_id>", methods=['POST'])

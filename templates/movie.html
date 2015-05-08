@@ -8,6 +8,22 @@
         <li><a href = {{ movie.imdb_url }}>IMDB</a></li>
 
     </ul>
+      <form action="/movies/{{ movie.movie_id }}" method="POST">
+    Rate this movie:
+    <select name="score">
+      <option value=1>1</option>
+      <option value=2>2</option>
+      <option value=3>3</option>
+      <option value=4>4</option>
+      <option value=5>5</option>
+    </select>
+    <input type="submit" value="Rate It!">
+    </form>
+
+    <p><b>Average rating:</b> {{ average }}</p>
+    {% if prediction %}
+      <p>We predict you will rate this movie {{ prediction }}.</p>
+    {% endif %}
 
         {% if movie.ratings %}
         <h2>Ratings</h2>
@@ -20,17 +36,7 @@
         {% endfor %}
         </ul>
     {% endif %}
-   <form action="/movies/{{ movie.movie_id }}" method="POST">
-    Rate this movie:
-    <select name="score">
-      <option value=1>1</option>
-      <option value=2>2</option>
-      <option value=3>3</option>
-      <option value=4>4</option>
-      <option value=5>5</option>
-    </select>
-    <input type="submit" value="Rate It!">
-    </form>
+ 
 
 
 {% endblock %}
