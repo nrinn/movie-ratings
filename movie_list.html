@@ -6,7 +6,7 @@
       {% for movie in movies %}
           <li>
               <a href="/movies/{{ movie.movie_id }}">
-                {{ sorted(movie.title) }}
+                {{ movie.title }}
               </a>
           </li>
       {% endfor %}
