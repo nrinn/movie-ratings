@@ -97,7 +97,8 @@ def user_detail(user_id):
 def movie_list():
     """Show list of movies."""
 
-    movies = Movie.query.all()
+    movies = Movie.query.order_by(Movie.title).all()
+
 
     return render_template("movie_list.html", movies=movies)
 
