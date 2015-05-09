@@ -2,6 +2,7 @@
 
 from flask_sqlalchemy import SQLAlchemy
 
+import correlation
 
 # This is the connection to the SQLite database; we're getting this through
 # the Flask-SQLAlchemy helper library. On this, we can find the `session`
@@ -12,7 +13,6 @@ db = SQLAlchemy()
 
 ##############################################################################
 # Model definitions
-import correlation
 
 class User(db.Model):
     """User of ratings website."""
@@ -50,7 +50,7 @@ class User(db.Model):
             return 0.0
 
     def predict_rating(self, movie):
-        """Predict user's rating of a movie."""
+        # """Predict user's rating of a movie."""
 
         other_ratings = movie.ratings
 

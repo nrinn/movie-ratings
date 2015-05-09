@@ -24,6 +24,30 @@
     {% if prediction %}
       <p>We predict you will rate this movie {{ prediction }}.</p>
     {% endif %}
+    <p>But the Evil Eye thinks you have crap taste. The Evil Eye predicts you will rate this movie: </p>
+
+    {% if eye_rating %}
+      <p>Eye Rating: <b>{{ eye_rating }}</b></p>
+    {% if difference %}
+      <p>Difference: <b>{{ difference }}</b></p>
+    {% endif %}
+    {% if beratement %}
+      <p>The Eye says: <b>{{ beratement }}</b></p>
+    {% endif %}
+    {% endif %}
+
+    {% if "user_id" in session %}
+      <h2>Your Rating</h2>
+    {% if user_rating %}
+        <p>You currently rate this a {{ user_rating.score }}</p>
+    {% endif %}
+      <form action="/movies/{{ movie.movie_id }}" method="POST">
+          <label>Rating:
+              <input type="number" name="score">
+          </label>
+          <input type="submit" value="Rate">
+      </form>
+  {% endif %}
 
         {% if movie.ratings %}
         <h2>Ratings</h2>
